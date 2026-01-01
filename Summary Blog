@@ -1,0 +1,206 @@
+As a cybersecurity enthusiast and hands-on learner, I set out to integrate two of the most powerful platforms available today:
+
+OpenAI’s ChatGPT — a state-of-the-art large language model (LLM) capable of advanced natural language reasoning.
+
+Microsoft Sentinel — a cloud-native SIEM/SOAR platform tailored for modern security operations centers (SOCs).
+
+The outcome is ActionsGPT — a fully automated, AI-enhanced SOC assistant that detects threats, enriches alerts using threat intelligence APIs, and intelligently analyzes incidents via GPT-4o.
+
+This post documents my journey: from building advanced prompts in ChatGPT, to deploying scalable automation in Azure using Sentinel and Logic Apps — all aligned with practical security use cases.
+
+🤖 Part 1: Engineering GPT for Cybersecurity
+
+Before touching the cloud, I started with ChatGPT to develop a specialized virtual assistant I called ActionsGPT. Its core purpose was to:
+
+Interpret and explain security alerts
+
+Summarize incident context
+
+Deliver structured, actionable insights
+
+Recommend next steps with confidence ratings
+
+✳️ Advanced Prompt Design
+
+Rather than issuing basic prompts like "analyze this alert," I created a structured and repeatable prompt framework:
+
+A custom system role to simulate the behavior of a cybersecurity analyst.
+
+Clear instructions for GPT’s responses to include:
+
+🔍 Observations
+
+📌 Key Findings
+
+🧠 Reasoning
+
+✅ Recommended Actions
+
+This structure not only improved the reliability and clarity of responses but also ensured outputs could be parsed or reported with ease.
+
+Pro Tip: Separating system and user roles in the OpenAI API leads to more consistent and context-aware GPT behavior.
+
+🔗 Threat Intelligence API Integration
+
+To reduce hallucination and validate the AI’s analysis, I designed future integration with external threat intelligence sources:
+
+✅ VirusTotal — for IP/domain/file reputation checks
+
+✅ AbuseIPDB — community-powered IP abuse database
+
+✅ ThreatFox — a malware IoC database from Abuse.ch
+
+These APIs are intended to:
+
+Pre-enrich alerts before GPT receives them
+
+Provide reliable, real-time threat data
+
+Increase accuracy and trust in GPT’s recommendations
+
+In upcoming iterations, this data will be parsed and summarized before being passed into GPT's prompt context.
+
+📊 GPT-Powered Excel Macros
+
+As a side experiment, I used ChatGPT to write Excel VBA macros that:
+
+Export GPT responses directly into spreadsheets
+
+Format and structure security findings automatically
+
+Create visual timelines of threat activity
+
+This feature makes it easier to present AI findings to stakeholders or generate compliance reports in a standardized format.
+
+☁️ Part 2: Building a Cloud SIEM with Azure Sentinel
+
+With the GPT logic ready, I moved to Azure to deploy the operational backbone: Microsoft Sentinel.
+
+🏗️ Sentinel Lab Setup
+
+I began by:
+
+Creating a Log Analytics Workspace
+
+Enabling Microsoft Sentinel
+
+Connecting basic log sources (e.g., Azure AD SigninLogs, AzureActivity)
+
+Configuring data usage limits to remain within the free tier
+
+This lab became the testbed for simulating alerts and building incident-handling pipelines.
+
+🔔 Custom Alert Creation
+
+One key use case I developed was a custom Sentinel analytic rule:
+
+“Successful Sign-ins from Tor Network”
+
+Utilized external lists of Tor exit node IPs
+
+Queried with KQL every 5 minutes
+
+Created incidents for matching sign-ins
+
+The rule was deployed via ARM template (JSON) and verified under Sentinel’s Analytics Rules section. I also experimented with MITRE ATT&CK mappings, such as T1133 (External Remote Services).
+
+🧠 Deploying GPT-4o via Azure OpenAI
+
+I then provisioned the Azure OpenAI resource and:
+
+Deployed the GPT-4o model (location: East US 2)
+
+Tested and tuned my custom prompts in the OpenAI Playground
+
+Validated API usage via structured requests using:
+
+ChatGPT-Body.json
+
+ChatGPT-Role.txt
+
+This allowed precise control over temperature, token usage, and output format — all of which are critical in security applications.
+
+⚙️ Creating the Logic App (Automation Playbook)
+
+I built a custom Logic App playbook to connect all the moving parts:
+
+Trigger: When Sentinel generates an incident
+
+Initialize Variables: API key, endpoint, and body payload
+
+Send HTTP POST: Call Azure OpenAI with structured context
+
+Receive GPT Response: Capture Observations, Findings, Actions
+
+Write Back: Store results in the incident or external systems
+
+To ensure secure access, I assigned the Microsoft Sentinel Responder role to the Logic App via Azure IAM.
+
+🧪 Test Scenario: Detecting Tor-Based Logins
+
+To validate the system, I simulated a login from a known Tor IP. The workflow executed as follows:
+
+Sentinel detected the event via my custom rule
+
+Logic App was automatically triggered
+
+GPT-4o received incident context and returned analysis:
+
+{
+  "Observations": "Login from known Tor exit node.",
+  "Findings": [
+    "User: admin@company.com",
+    "IP: 185.220.101.15 (listed in Tor IPs)",
+    "Login occurred outside business hours"
+  ],
+  "Recommendations": [
+    "Flag this user session for investigation",
+    "Consider enforcing MFA",
+    "Add IP to watchlist"
+  ]
+}
+
+
+This proved that the system could autonomously analyze and respond to real-world scenarios.
+
+📸 Visual Documentation
+
+Throughout the project, I captured key steps and configurations:
+
+Sentinel incident views and alert rules
+
+Logic App designer flow
+
+OpenAI Playground testing
+
+IAM role configurations
+
+API call structure and response samples
+
+📊 Cost Management Strategy
+
+To keep the project budget-friendly, I:
+
+Operated within the Azure free tier
+
+Sentinel: 5GB/month ingestion
+
+Logic Apps: Low-volume trigger execution
+
+Controlled token usage in GPT requests
+
+Avoided noisy log sources (e.g., Defender, Syslog)
+
+Set daily ingestion caps in Log Analytics
+
+This setup is ideal for labs, learning environments, and proof-of-concept deployments.
+
+📝 Key Takeaways
+
+GPT models become exponentially more valuable when combined with real data and structure.
+
+Logic Apps are incredibly flexible and simple for building event-driven workflows.
+
+Prompt engineering is not optional — it’s essential to control AI behavior.
+
+Integrating GPT into Sentinel workflows creates a powerful “AI co-pilot” for incident triage.
