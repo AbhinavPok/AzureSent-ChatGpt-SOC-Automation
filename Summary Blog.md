@@ -2,7 +2,7 @@
 
 ## 🚀 Introduction
 
-As a cybersecurity enthusiast and hands-on learner, I set out to integrate two of the most powerful platforms available today:
+I set out to integrate two of the most powerful platforms available today:
 
 - **OpenAI’s ChatGPT** — a state-of-the-art large language model (LLM) capable of advanced natural language reasoning.
 - **Microsoft Sentinel** — a cloud-native SIEM/SOAR platform designed for modern Security Operations Centers (SOCs).
