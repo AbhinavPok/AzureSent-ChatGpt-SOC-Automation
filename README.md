@@ -1,29 +1,43 @@
-# AzureSent-ChatGpt-SOC-Automation
+# Building ActionsGPT: My Journey to Automating Cybersecurity with ChatGPT + Azure Sentinel
 
-Integration of Microsoft Sentinel with Azure OpenAI (GPT-4) using Logic Apps for SOC automation. This project sets up automated incident response workflows powered by AI, including API enrichment, playbook deployment, and alert investigation from Microsoft Sentinel.
+**ActionsGPT** is a project I built to combine the power of **ChatGPT (GPT-4o)** with **Microsoft Sentinel** to create an automated cybersecurity incident response system.
 
-**ActionsGPT** is a hands-on security automation project that connects **Microsoft Sentinel** with **Azure OpenAI (GPT-4o)** using **Logic Apps**. This solution turns incident data into actionable intelligence using LLM-based analysis.
-
-It’s designed to simulate how a Tier 1/2 SOC analyst would review security alerts, triage them, and recommend next steps — all through automation.
+It uses Logic Apps in Azure to send alert data from Sentinel to GPT, get back AI-generated analysis, and post it back into the incident — all automatically.
 
 ---
 
-## 📌 What This Project Does
+## 🚀 What This Project Includes
 
-- ✅ Uses **Microsoft Sentinel** to detect real-world threats (e.g., Tor sign-ins)
-- ✅ Triggers **Logic Apps** automatically when alerts fire
-- ✅ Sends contextual alert data to **GPT-4o** (via Azure OpenAI)
-- ✅ GPT responds with structured threat analysis & response recommendations
-- ✅ Optionally exports the results, adds them to incidents, or notifies SOC
+### ✅ ChatGPT / OpenAI
+- Created custom prompts for cybersecurity alerts
+- Structured GPT responses with observations, findings, and actions
+- Connected to threat intelligence APIs like:
+  - VirusTotal
+  - AbuseIPDB
+  - ThreatFox
+- Even used GPT to generate Excel macros for reporting
+
+### ✅ Microsoft Azure
+- Set up a **SIEM using Microsoft Sentinel**
+- Deployed **Azure OpenAI GPT-4o**
+- Customized prompts in **OpenAI Playground**
+- Built a **Logic App** playbook to:
+  - Trigger on Sentinel incidents
+  - Send alert data to GPT
+  - Return analysis and next steps
 
 ---
 
-## 🧠 Project Workflow
+## 🔧 How It Works
 
-```mermaid
-flowchart TD
-    A[Sentinel Analytics Rule Fires] --> B[Logic App Triggered]
-    B --> C[Format Incident Data]
-    C --> D[Send Data to GPT-4o via Azure OpenAI API]
-    D --> E[Receive Structured Response]
-    E --> F[Post Back to Sentinel / Notify Analyst / Export]
+1. Sentinel detects a threat (like login from a Tor IP)
+2. Logic App gets triggered
+3. Alert data is sent to GPT-4o
+4. GPT returns a response like:
+
+```json
+{
+  "Observations": "Login from Tor node",
+  "Findings": ["User: admin@domain.com", "IP: 185.x.x.x"],
+  "Recommendations": ["Enable MFA", "Investigate session", "Block IP"]
+}
